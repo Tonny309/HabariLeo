@@ -120,23 +120,15 @@ export function ArticleCard({ article, variant = "default" }: ArticleCardProps) 
   );
 }
 
-/** Coloured tag pill used to label a category. */
+/** Coloured tag pill used to label a category. Renders as a span so it can
+ *  safely sit inside another <a> (e.g. an ArticleCard Link). */
 export function CategoryChip({
-  slug, name, accent, onDark = false,
-}: { slug: string; name: string; accent: "brand" | "aqua" | "orange"; onDark?: boolean }) {
+  name, accent, onDark = false,
+}: { slug?: string; name: string; accent: "brand" | "aqua" | "orange"; onDark?: boolean }) {
   const colorMap = {
     brand: onDark ? "bg-white text-primary" : "bg-primary text-primary-foreground",
     aqua: "bg-aqua text-aqua-foreground",
     orange: "bg-orange text-orange-foreground",
   };
-  return (
-    <Link
-      to="/category/$slug"
-      params={{ slug }}
-      onClick={(e) => e.stopPropagation()}
-      className={`chip ${colorMap[accent]} w-fit`}
-    >
-      {name}
-    </Link>
-  );
+  return <span className={`chip ${colorMap[accent]} w-fit`}>{name}</span>;
 }

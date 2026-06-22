@@ -1,12 +1,15 @@
 import { Facebook, Twitter, Linkedin, Link as LinkIcon, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /** Article social sharing row. WhatsApp + native social + copy link. */
 export function ShareButtons({ url, title }: { url: string; title: string }) {
   const [copied, setCopied] = useState(false);
+  const [fullUrl, setFullUrl] = useState(url);
 
-  const fullUrl = typeof window !== "undefined" ? `${window.location.origin}${url}` : url;
+  // Resolve absolute URL after mount to avoid SSR hydration mismatch.
+  useEffect(() => { setFullUrl(`${window.location.origin}${url}`); }, [url]);
+
   const enc = (s: string) => encodeURIComponent(s);
 
   const copy = async () => {
