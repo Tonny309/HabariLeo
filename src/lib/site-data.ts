@@ -715,18 +715,23 @@ export const relatedArticles = (article: Article, limit = 3) =>
 
 export const HERO_IMAGE = heroNairobi;
 
-export const formatDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-KE", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+const MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-export const formatDateTime = (iso: string) =>
-  new Date(iso).toLocaleString("en-KE", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+const toUtcDate = (iso: string) => {
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+export const formatDate = (iso: string) => {
+  const date = toUtcDate(iso);
+  if (!date) return iso;
+  return `${String(date.getUTCDate()).padStart(2, "0")} ${MONTHS_SHORT[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+};
+
+export const formatDateTime = (iso: string) => {
+  const date = toUtcDate(iso);
+  if (!date) return iso;
+  const datePart = `${String(date.getUTCDate()).padStart(2, "0")} ${MONTHS_SHORT[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+  const timePart = `${String(date.getUTCHours()).padStart(2, "0")}:${String(date.getUTCMinutes()).padStart(2, "0")}`;
+  return `${datePart}, ${timePart} UTC`;
+};
